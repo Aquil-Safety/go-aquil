@@ -93,7 +93,53 @@ if err != nil {
 	log.Fatal(err)
 }
 
-fmt.Println(string(incidentResp.Body))
+// Get incident ID from response and print it
+var incident struct {
+	OK bool `json:"ok"`
+	Data []struct {
+		ID string `json:"id"`
+	} `json:"data"`
+}
+if err: = json.Unmarshal(incidentResp.Body, &incident); err != nil {
+	log.Fatal(err)
+}
+incidentID := incident.Data[0].ID
+fmt.Printf("Created incident with ID: %s\n", incidentID)
+
+// Gather escalation policy to then page incident with it
+escalationPoliciesResp, err := client.ListEscalationPolicies(ctx)
+if err != nil {
+	log.Fatal(err)
+}
+
+var escalationPolicies struct {
+	Data []struct {
+		ID string `json:"id"`
+	} `json:"data"`
+}
+if err := json.Unmarshal(escalationPoliciesResp.Body, &escalationPolicies); err != nil {
+	log.Fatal(err)
+}
+if len(escalationPolicies.Data) == 0 {
+	log.Fatal("no escalation policies configured")
+}
+
+escalationPolicyID := escalationPolicies.Data[0].ID
+
+fmt.Printf("Paging incident %s to escalation policy %s\n", incidentID, escalationPolicyID)
+pagingResp, err := client.StartIncidentPaging(
+	ctx,
+	incidentID,
+	aquil.StartIncidentPagingRequest{
+		EscalationPolicyID: &escalationPolicyID,
+	},
+)
+
+if err != nil {
+	log.Fatal(err)
+}
+
+fmt.Printf("Started paging incident, response: %s\n", string(pagingResp.Body))
 ```
 
 View examples in [cmd/example](/cmd/example/) for more usage patterns.
