@@ -144,4 +144,4 @@ fmt.Printf("Started paging incident, response: %s\n", string(pagingResp.Body))
 
 View examples in [cmd/example](/cmd/example/) for more usage patterns.
 
-View official API docs for more details on request/response formats: https://docs.aquil.com/go-sdk
+View official API docs for more details on request/response formats: https://docs.aquilsafety.com/go-sdk
