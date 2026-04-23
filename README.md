@@ -1,4 +1,4 @@
-# Aquil SDK
+# go-aquil
 
 Aquil Safety Go SDK provides a convenient interface for interacting with the Aquil API in Go applications. It abstracts away raw HTTP requests and offers typed models for request bodies and query parameters, making it easier to integrate Aquil into your Go projects.
 
